@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../services/auth_service.dart';
 import '../utils/app_theme.dart';
+import '../api_keys.dart';
 
 import '../services/cart_service.dart';
 import '../services/chat_service.dart';
@@ -31,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _model = GenerativeModel(
       model: 'gemini-2.5-flash',
-      apiKey: 'AIzaSyBePQRit74C0ZqMTytMZtTi5XesECTEXpE',
+      apiKey: ApiKeys.geminiApiKey,
       systemInstruction: Content.system('''
 You are the "FitZone Elite Concierge" - an advanced, highly intelligent luxury sales assistant for FitZone store.
 
@@ -77,14 +78,14 @@ Returns: support@fitzone.com. 30-day return policy.
     _loadChatHistory();
   }
 
-  String get _uid => FirebaseAuth.instance.currentUser?.uid ?? '';
+  String get _documentId => AuthService().currentNumericId ?? '';
   CollectionReference get _chatRef => FirebaseFirestore.instance
       .collection('users')
-      .doc(_uid)
+      .doc(_documentId)
       .collection('chat_history');
 
   Future<void> _loadChatHistory() async {
-    if (_uid.isEmpty) return;
+    if (_documentId.isEmpty) return;
     final snap =
         await _chatRef.orderBy('timestamp', descending: false).limit(50).get();
     if (snap.docs.isEmpty) return;
@@ -161,7 +162,7 @@ Returns: support@fitzone.com. 30-day return policy.
         final cleanedAiText = rawText.toUpperCase();
 
         // 🔥 SAVE TO FIREBASE FIRESTORE (per user) 🔥
-        if (_uid.isNotEmpty) {
+        if (_documentId.isNotEmpty) {
           _chatRef.add({
             'user_message': messageText,
             'ai_response': cleanedAiText,
