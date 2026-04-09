@@ -1,0 +1,211 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class LocaleService extends ChangeNotifier {
+  static final LocaleService _instance = LocaleService._internal();
+  factory LocaleService() => _instance;
+  LocaleService._internal();
+
+  Locale _currentLocale = const Locale('en');
+  Locale get currentLocale => _currentLocale;
+
+  void setLocale(Locale locale) {
+    if (_currentLocale == locale) return;
+    _currentLocale = locale;
+    notifyListeners();
+  }
+
+  bool get isRTL => _currentLocale.languageCode == 'ar' || _currentLocale.languageCode == 'ku';
+
+  String translate(String key) {
+    return _translations[_currentLocale.languageCode]?[key] ?? key;
+  }
+
+  TextStyle getTextStyle({
+    required TextStyle baseStyle,
+    double? fontSize,
+    FontWeight? fontWeight,
+    Color? color,
+    double? letterSpacing,
+    double? height,
+  }) {
+    if (isRTL) {
+      return GoogleFonts.notoKufiArabic(
+        textStyle: baseStyle,
+        fontSize: fontSize ?? baseStyle.fontSize,
+        fontWeight: fontWeight ?? baseStyle.fontWeight,
+        color: color ?? baseStyle.color,
+        letterSpacing: 0,
+        height: height ?? (baseStyle.height ?? 1.4) * 1.2, // Increase line height for RTL scripts
+      );
+    }
+    return baseStyle.copyWith(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      letterSpacing: letterSpacing,
+      height: height,
+    );
+  }
+
+  static final Map<String, Map<String, String>> _translations = {
+    'en': {
+      'PROFILE': 'PROFILE',
+      'ALEX RIVERA': 'ALEX RIVERA',
+      'EST. 2024 • PLATINUM TIER': 'EST. 2024 • PLATINUM TIER',
+      'SESSIONS': 'SESSIONS',
+      'POINTS': 'POINTS',
+      'RANK': 'RANK',
+      'MANAGEMENT': 'MANAGEMENT',
+      'ORDER HISTORY': 'ORDER HISTORY',
+      'MY ARCHIVE': 'MY ARCHIVE',
+      'DELIVERY ADDRESS': 'DELIVERY ADDRESS',
+      'SECURITY': 'SECURITY',
+      'PAYMENT METHODS': 'PAYMENT METHODS',
+      'AUTH SETTINGS': 'AUTH SETTINGS',
+      'PREFERENCES': 'PREFERENCES',
+      'LANGUAGE': 'LANGUAGE',
+      'END SESSION': 'END SESSION',
+      'AUTHENTICATE': 'AUTHENTICATE',
+      'IDENTIFICATION': 'IDENTIFICATION',
+      'SECURITY KEY': 'SECURITY KEY',
+      'APPLY FOR MEMBERSHIP': 'APPLY FOR MEMBERSHIP',
+      'COLLECTIONS': 'COLLECTIONS',
+      'THE ARCHIVE': 'THE ARCHIVE',
+      'THE ART OF PERFORMANCE': 'THE ART OF PERFORMANCE',
+      'SEARCH': 'SEARCH...',
+      'CATEGORIES': 'CATEGORIES',
+      'PREMIUM CATEGORIES': 'PREMIUM CATEGORIES',
+      'FEATURED PRODUCTS': 'FEATURED PRODUCTS',
+      'BAG': 'BAG',
+      'EMPTY COLLECTION': 'EMPTY COLLECTION',
+      'TOTAL': 'TOTAL',
+      'PURCHASE': 'PURCHASE',
+      'SUCCESS': 'SUCCESS',
+      'CONCIERGE': 'CONCIERGE',
+      'ACQUIRE': 'ACQUIRE',
+      'SIZE': 'SIZE',
+      'SPECIFICATIONS': 'SPECIFICATIONS',
+      'Gym & Fitness': 'Gym & Fitness',
+      'Football': 'Football',
+      'Basketball': 'Basketball',
+      'Running': 'Running',
+      'Clothing': 'Clothing',
+      'Shoes': 'Shoes',
+      'Accessories': 'Accessories',
+      'Equipment': 'Equipment',
+      'Nutrition': 'Nutrition',
+      'Outdoor & Adventure': 'Outdoor & Adventure',
+      'Yoga & Wellness': 'Yoga & Wellness',
+      'Kids & Youth': 'Kids & Youth',
+      'Boxing & Combat': 'Boxing & Combat',
+      'Deals & Collections': 'Deals & Collections',
+      'FITZONE': 'FITZONE',
+    },
+    'ku': {
+      'PROFILE': 'پڕۆفایل',
+      'ALEX RIVERA': 'ئالێکس ڕێڤێرا',
+      'EST. 2024 • PLATINUM TIER': 'دامەزراوە ٢٠٢٤ • ئاستی پلاتینۆم',
+      'SESSIONS': 'خولەکان',
+      'POINTS': 'خاڵەکان',
+      'RANK': 'پلە',
+      'MANAGEMENT': 'بەڕێوەبردن',
+      'ORDER HISTORY': 'مێژووی داواکارییەکان',
+      'MY ARCHIVE': 'ئەرشیفەکەم',
+      'DELIVERY ADDRESS': 'ناونیشانی گەیاندن',
+      'SECURITY': 'ئاسایش',
+      'PAYMENT METHODS': 'ڕێگاکانی پارەدان',
+      'AUTH SETTINGS': 'ڕێکخستنەکانی چوونەژوورەوە',
+      'PREFERENCES': 'پەسەندکراوەکان',
+      'LANGUAGE': 'زمان',
+      'END SESSION': 'کۆتاییهێنان بە چوونەژوورەوە',
+      'AUTHENTICATE': 'پشتڕاستکردنەوە',
+      'IDENTIFICATION': 'ناسنامە',
+      'SECURITY KEY': 'کلیلە ئاسایش',
+      'APPLY FOR MEMBERSHIP': 'داواکاری بۆ ئەندامێتی',
+      'COLLECTIONS': 'کۆکراوەکان',
+      'THE ARCHIVE': 'ئەرشیف',
+      'THE ART OF PERFORMANCE': 'هونەری ئەنجامدان',
+      'SEARCH': 'گەڕان...',
+      'FITZONE': 'فیتزۆن',
+      'PREMIUM CATEGORIES': 'هاوپۆلە نایابەکان',
+      'FEATURED PRODUCTS': 'بەرهەمە دیارەکان',
+      'BAG': 'کیف',
+      'EMPTY COLLECTION': 'کۆکراوەی بەتاڵ',
+      'TOTAL': 'کۆتایی',
+      'PURCHASE': 'کڕین',
+      'SUCCESS': 'سەرکەوتوو بوو',
+      'CONCIERGE': 'ڕاوێژکار',
+      'ACQUIRE': 'بەدەستهێنان',
+      'SIZE': 'قەبارە',
+      'SPECIFICATIONS': 'تایبەتمەندییەکان',
+      'Gym & Fitness': 'جوانی و ڕێکی',
+      'Football': 'تۆپی پێ',
+      'Basketball': 'تۆپی سەلە',
+      'Running': 'ڕاکردن',
+      'Clothing': 'جلوبەرگ',
+      'Shoes': 'پێڵاو',
+      'Accessories': 'ئێکسسوارات',
+      'Equipment': 'کەرەستەکان',
+      'Nutrition': 'خۆراکەکان',
+      'Outdoor & Adventure': 'دەرەوە و سەرکێشی',
+      'Yoga & Wellness': 'یۆگا و تەندروستی',
+      'Kids & Youth': 'منالان و گەنجان',
+      'Boxing & Combat': 'بۆکسێن و شەڕ',
+      'Deals & Collections': 'داشکاندن و کۆکراوەکان',
+      'CATEGORIES': 'هاوپۆلەکان',
+    },
+    'ar': {
+      'PROFILE': 'الحساب',
+      'ALEX RIVERA': 'أليكس ريفيرا',
+      'EST. 2024 • PLATINUM TIER': 'منذ ٢٠٢٤ • الفئة البلاتينية',
+      'SESSIONS': 'الجلسات',
+      'POINTS': 'النقاط',
+      'RANK': 'الرتبة',
+      'MANAGEMENT': 'الإدارة',
+      'ORDER HISTORY': 'سجل الطلبات',
+      'MY ARCHIVE': 'أرشيفي',
+      'DELIVERY ADDRESS': 'عنوان التوصيل',
+      'SECURITY': 'الأمان',
+      'PAYMENT METHODS': 'طرق الدفع',
+      'AUTH SETTINGS': 'إعدادات المصادقة',
+      'PREFERENCES': 'التفضیەات',
+      'LANGUAGE': 'اللغة',
+      'END SESSION': 'تسجيل الخروج',
+      'AUTHENTICATE': 'مصادقة',
+      'IDENTIFICATION': 'تحديد الهوية',
+      'SECURITY KEY': 'مفتاح الأمان',
+      'APPLY FOR MEMBERSHIP': 'طلب العضوية',
+      'COLLECTIONS': 'المجموعات',
+      'THE ARCHIVE': 'الأرشيف',
+      'THE ART OF PERFORMANCE': 'فن الأداء',
+      'SEARCH': 'بحث...',
+      'FITZONE': 'فيت زون',
+      'PREMIUM CATEGORIES': 'الفئات الفاخرة',
+      'FEATURED PRODUCTS': 'المنتجات المميزة',
+      'BAG': 'حقيبة',
+      'EMPTY COLLECTION': 'مجموعة فارغة',
+      'TOTAL': 'المجموع',
+      'PURCHASE': 'شراء',
+      'SUCCESS': 'تم بنجاح',
+      'CONCIERGE': 'المساعد',
+      'ACQUIRE': 'اقتناء',
+      'SIZE': 'المقاس',
+      'SPECIFICATIONS': 'المواصفات',
+      'Gym & Fitness': 'جمعة و لياقة',
+      'Football': 'كرة القدم',
+      'Basketball': 'كرة السلة',
+      'Running': 'الجري',
+      'Clothing': 'ملابس',
+      'Shoes': 'أحذية',
+      'Accessories': 'إكسسوارات',
+      'Equipment': 'معدات',
+      'Nutrition': 'تغذية',
+      'Outdoor & Adventure': 'في الهواء الطلق',
+      'Yoga & Wellness': 'يوغا و عافية',
+      'Kids & Youth': 'أطفال و شباب',
+      'Boxing & Combat': 'ملاكمة و قتال',
+      'Deals & Collections': 'عروض و مجموعات',
+    }
+  };
+}
